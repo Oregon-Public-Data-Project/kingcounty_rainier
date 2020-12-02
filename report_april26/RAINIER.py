@@ -63,9 +63,23 @@ if __name__ == "__main__":
     ## Get the county (or county group) specific dataset
     dataset = pd.read_pickle(Path("../pickle_jar/synthetic_dataset.pkl"))
 
+
     ## How do you handle data at the end, where increased testing and
     ## lags might be an issue?
-    dataset = dataset.loc[:"2020-04-20"]
+    #dataset = dataset.loc[:"2020-04-20"]
+
+    ### Note that this line dataset.loc[:"2020-04-20"] is not 
+    ### cool with pandas the loc slice docs say:
+    ### https://pandas.pydata.org/pandas-docs/stable/reference/api/pandas.DataFrame.loc.html
+    ### Note that contrary to usual python slices, both the start and the stop are included
+    ### Is this an artifact of some ancient pandas? 
+
+    # instead just drop the last 6 rows like so: 
+    rows_to_drop = 6
+    dataset.drop(dataset.tail(rows_to_drop).index, 
+            inplace = True) 
+    print(dataset)
+
 
     ## Use the dataset to compute a testing-adjusted epicurve
     _version = 0
